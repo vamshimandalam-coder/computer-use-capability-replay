@@ -91,4 +91,4 @@ Important limitations: the operator experience is deliberately minimal; visual-c
 
 ## Development note
 
-AI-assisted development was used extensively. The repository preserves the actual generated evidence and ordinary commit history; the submitter remains responsible for understanding and defending the architecture, behavior, and trade-offs.
+AI-assisted development was used in this project.
