@@ -1,0 +1,43 @@
+[
+  {
+    "event": "run_started",
+    "runId": "377815c8-1eac-40b0-84c0-1971b5198136",
+    "mode": "deterministic_replay",
+    "modelInitialized": false,
+    "modelCalls": 0,
+    "inputs": {
+      "memberId": "[REDACTED]"
+    }
+  },
+  {
+    "event": "step_completed",
+    "stepId": "open-app",
+    "strategy": "url",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "fill-member-number",
+    "strategy": "label",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-search-members",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "run_finished",
+    "result": {
+      "status": "business_outcome",
+      "runId": "377815c8-1eac-40b0-84c0-1971b5198136",
+      "code": "MEMBER_NOT_FOUND",
+      "details": "The application returned a known domain result.",
+      "evidence": [
+        "evidence/replay-exception/run.json"
+      ],
+      "modelCalls": 0
+    }
+  }
+]

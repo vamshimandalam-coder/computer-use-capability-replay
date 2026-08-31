@@ -1,0 +1,284 @@
+[
+  {
+    "event": "discovery_started",
+    "runId": "0de65a40-0c0e-4c1e-8b89-4c7bfe4eaa89",
+    "goal": "Look up member [REDACTED_INPUT] and read the current savings balance",
+    "provider": "openai",
+    "model": "gpt-5-mini",
+    "inputs": {
+      "memberId": "[REDACTED]"
+    }
+  },
+  {
+    "event": "model_decision",
+    "step": 0,
+    "decision": {
+      "action": "fill",
+      "target": "Member number",
+      "value": "[REDACTED_INPUT]",
+      "justification": "Populate the required Member number field (currently empty) with the provided memberId so the record can be searched next."
+    },
+    "observation": {
+      "url": "http://127.0.0.1:4317/",
+      "title": "Heritage CU Operator",
+      "controls": [
+        {
+          "ref": "c0",
+          "role": "input",
+          "name": "Member number",
+          "state": "empty"
+        },
+        {
+          "ref": "c1",
+          "role": "button",
+          "name": "Search members",
+          "state": "n/a"
+        }
+      ],
+      "screenshot": "evidence/discovery/step-0-observation.png"
+    }
+  },
+  {
+    "event": "action_executed",
+    "step": 0,
+    "policy": "allowed",
+    "recordedStep": {
+      "id": "fill-member-number",
+      "action": "fill",
+      "target": {
+        "surface": "browser",
+        "description": "Member number",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "label",
+            "label": "Member number"
+          },
+          {
+            "kind": "attribute",
+            "name": "name",
+            "value": "member"
+          }
+        ]
+      },
+      "value": "[PARAMETERIZED]",
+      "risk": "safe",
+      "waitMs": 5000
+    }
+  },
+  {
+    "event": "model_decision",
+    "step": 1,
+    "decision": {
+      "action": "click",
+      "target": "Search members",
+      "value": "",
+      "justification": "Member number field is already filled ([REDACTED_INPUT]); click 'Search members' to load the member record and display the savings balance."
+    },
+    "observation": {
+      "url": "http://127.0.0.1:4317/",
+      "title": "Heritage CU Operator",
+      "controls": [
+        {
+          "ref": "c0",
+          "role": "input",
+          "name": "Member number",
+          "state": "filled"
+        },
+        {
+          "ref": "c1",
+          "role": "button",
+          "name": "Search members",
+          "state": "n/a"
+        }
+      ],
+      "screenshot": "evidence/discovery/step-1-observation.png"
+    }
+  },
+  {
+    "event": "action_executed",
+    "step": 1,
+    "policy": "allowed",
+    "recordedStep": {
+      "id": "click-search-members",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Search members",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Search members"
+          },
+          {
+            "kind": "text",
+            "text": "Search members",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Search results"
+      }
+    }
+  },
+  {
+    "event": "model_decision",
+    "step": 2,
+    "decision": {
+      "action": "click",
+      "target": "Open member record",
+      "value": "",
+      "justification": "Open the member record for member [REDACTED_INPUT] (Avery Sample) to view account details and the current savings balance."
+    },
+    "observation": {
+      "url": "http://127.0.0.1:4317/search",
+      "title": "Heritage CU Operator",
+      "controls": [
+        {
+          "ref": "c0",
+          "role": "a",
+          "name": "Open member record",
+          "state": "n/a"
+        }
+      ],
+      "screenshot": "evidence/discovery/step-2-observation.png"
+    }
+  },
+  {
+    "event": "action_executed",
+    "step": 2,
+    "policy": "allowed",
+    "recordedStep": {
+      "id": "click-open-member-record",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Open member record",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "Open member record"
+          },
+          {
+            "kind": "text",
+            "text": "Open member record",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Member record"
+      }
+    }
+  },
+  {
+    "event": "model_decision",
+    "step": 3,
+    "decision": {
+      "action": "click",
+      "target": "Savings account",
+      "value": "",
+      "justification": "Click the 'Savings account' link to open the member's savings details and view the current balance (memberId [REDACTED_INPUT])."
+    },
+    "observation": {
+      "url": "http://127.0.0.1:4317/member/[REDACTED_INPUT]",
+      "title": "Heritage CU Operator",
+      "controls": [
+        {
+          "ref": "c0",
+          "role": "a",
+          "name": "Savings account",
+          "state": "n/a"
+        }
+      ],
+      "screenshot": "evidence/discovery/step-3-observation.png"
+    }
+  },
+  {
+    "event": "action_executed",
+    "step": 3,
+    "policy": "allowed",
+    "recordedStep": {
+      "id": "click-savings-account",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Savings account",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "Savings account"
+          },
+          {
+            "kind": "text",
+            "text": "Savings account",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Savings account"
+      }
+    }
+  },
+  {
+    "event": "model_decision",
+    "step": 4,
+    "decision": {
+      "action": "done",
+      "target": "Close account",
+      "value": "",
+      "justification": "Requested savings balance is visible on the page ($4,812.37). No further interaction needed."
+    },
+    "observation": {
+      "url": "http://127.0.0.1:4317/member/[REDACTED_INPUT]/savings",
+      "title": "Heritage CU Operator",
+      "controls": [
+        {
+          "ref": "c0",
+          "role": "button",
+          "name": "Close account",
+          "state": "n/a"
+        }
+      ],
+      "screenshot": "evidence/discovery/step-4-observation.png"
+    }
+  },
+  {
+    "event": "discovery_succeeded",
+    "checkpoint": {
+      "kind": "visibleText",
+      "expected": "Current savings balance"
+    },
+    "recordedStepIds": [
+      "open-app",
+      "fill-member-number",
+      "click-search-members",
+      "click-open-member-record",
+      "click-savings-account"
+    ],
+    "artifact": "evidence/artifacts/read-savings.json",
+    "modelCalls": 5
+  },
+  {
+    "event": "discovery_finished",
+    "modelCalls": 5,
+    "durationMs": 24434
+  }
+]

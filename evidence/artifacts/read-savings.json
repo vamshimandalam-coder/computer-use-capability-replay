@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "1.0",
+  "capability": {
+    "id": "heritage.read-savings-balance",
+    "name": "Read savings balance",
+    "version": "1.0.0",
+    "description": "Find a synthetic member and return the current savings balance.",
+    "lifecycle": "draft"
+  },
+  "compatibility": {
+    "surface": "browser",
+    "application": "Heritage CU Operator",
+    "vendor": "Synthetic Heritage",
+    "versions": [
+      "1.x"
+    ],
+    "tenantOverrides": {}
+  },
+  "inputs": {
+    "memberId": {
+      "type": "string",
+      "required": true,
+      "pattern": "^[0-9]{5}$",
+      "description": "Synthetic member number",
+      "sensitive": true
+    }
+  },
+  "outputs": {
+    "balance": {
+      "type": "number",
+      "description": "Current savings balance in USD",
+      "target": {
+        "surface": "browser",
+        "description": "balance cell",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "css",
+            "selector": ".balance"
+          }
+        ]
+      },
+      "transform": "currency"
+    }
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "id": "open-app",
+      "action": "navigate",
+      "value": {
+        "source": "literal",
+        "value": "http://127.0.0.1:4317/"
+      },
+      "risk": "safe",
+      "waitMs": 5000
+    },
+    {
+      "id": "fill-member-number",
+      "action": "fill",
+      "target": {
+        "surface": "browser",
+        "description": "Member number",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "label",
+            "label": "Member number"
+          },
+          {
+            "kind": "attribute",
+            "name": "name",
+            "value": "member"
+          }
+        ]
+      },
+      "value": {
+        "source": "input",
+        "key": "memberId"
+      },
+      "risk": "safe",
+      "waitMs": 5000
+    },
+    {
+      "id": "click-search-members",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Search members",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "button",
+            "name": "Search members"
+          },
+          {
+            "kind": "text",
+            "text": "Search members",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Search results"
+      }
+    },
+    {
+      "id": "click-open-member-record",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Open member record",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "Open member record"
+          },
+          {
+            "kind": "text",
+            "text": "Open member record",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Member record"
+      }
+    },
+    {
+      "id": "click-savings-account",
+      "action": "click",
+      "target": {
+        "surface": "browser",
+        "description": "Savings account",
+        "framePath": [],
+        "locators": [
+          {
+            "kind": "role",
+            "role": "link",
+            "name": "Savings account"
+          },
+          {
+            "kind": "text",
+            "text": "Savings account",
+            "exact": true
+          }
+        ]
+      },
+      "risk": "safe",
+      "waitMs": 5000,
+      "checkpoint": {
+        "kind": "visibleText",
+        "expected": "Savings account"
+      }
+    }
+  ],
+  "businessOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "when": {
+        "kind": "visibleText",
+        "expected": "No member found"
+      }
+    }
+  ],
+  "recoveries": [
+    {
+      "code": "KNOWN_SERVICE_INTERSTITIAL",
+      "when": {
+        "kind": "visibleText",
+        "expected": "Temporary service notice"
+      },
+      "action": {
+        "id": "dismiss-service-interstitial",
+        "action": "click",
+        "target": {
+          "surface": "browser",
+          "description": "continue link",
+          "framePath": [],
+          "locators": [
+            {
+              "kind": "role",
+              "role": "link",
+              "name": "Continue"
+            },
+            {
+              "kind": "text",
+              "text": "Continue",
+              "exact": true
+            }
+          ]
+        },
+        "risk": "safe",
+        "waitMs": 5000,
+        "checkpoint": {
+          "kind": "visibleText",
+          "expected": "Search results"
+        }
+      },
+      "maxAttempts": 1
+    }
+  ],
+  "escalation": {
+    "on": [
+      "CONTROL_NOT_FOUND",
+      "AMBIGUOUS_CONTROL",
+      "PERMISSION_DENIED",
+      "HUMAN_APPROVAL_REQUIRED"
+    ],
+    "requestedAction": "Inspect the live page, correct the state, and explicitly resume or abort."
+  },
+  "success": {
+    "kind": "visibleText",
+    "expected": "Current savings balance"
+  },
+  "redaction": {
+    "inputKeys": [
+      "memberId"
+    ],
+    "outputKeys": []
+  }
+}

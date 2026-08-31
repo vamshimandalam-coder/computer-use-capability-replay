@@ -1,0 +1,60 @@
+[
+  {
+    "event": "run_started",
+    "runId": "7b48269f-05bb-4bf3-95bd-0f9e7dfbd89e",
+    "mode": "deterministic_replay",
+    "modelInitialized": false,
+    "modelCalls": 0,
+    "inputs": {
+      "memberId": "[REDACTED]"
+    }
+  },
+  {
+    "event": "step_completed",
+    "stepId": "open-app",
+    "strategy": "url",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "fill-member-number",
+    "strategy": "label",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-search-members",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "run_finished",
+    "result": {
+      "status": "failure",
+      "runId": "7b48269f-05bb-4bf3-95bd-0f9e7dfbd89e",
+      "category": "permission",
+      "code": "PERMISSION_DENIED",
+      "stepId": "click-search-members",
+      "expected": "step and checkpoint complete",
+      "observed": "HERITAGE CREDIT UNION — MEMBER SERVICES\nPermission denied\n\nYour role cannot access this member.",
+      "retryable": false,
+      "evidence": [
+        "evidence/replay-failure/run.json",
+        "evidence/replay-failure/failure.png"
+      ],
+      "escalation": {
+        "runId": "7b48269f-05bb-4bf3-95bd-0f9e7dfbd89e",
+        "capability": "heritage.read-savings-balance",
+        "stepId": "click-search-members",
+        "reason": "PERMISSION_DENIED",
+        "url": "http://127.0.0.1:4317/search",
+        "observation": "HERITAGE CREDIT UNION — MEMBER SERVICES\nPermission denied\n\nYour role cannot access this member.",
+        "screenshot": "evidence/replay-failure/failure.png",
+        "risk": "runtime",
+        "requestedAction": "Inspect the live page, correct the state, and explicitly resume or abort.",
+        "owner": "INTERVENTION_REQUESTED"
+      },
+      "modelCalls": 0
+    }
+  }
+]

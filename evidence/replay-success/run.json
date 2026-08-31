@@ -1,0 +1,59 @@
+[
+  {
+    "event": "run_started",
+    "runId": "e86c1e20-9120-45da-959e-15a876381db7",
+    "mode": "deterministic_replay",
+    "modelInitialized": false,
+    "modelCalls": 0,
+    "inputs": {
+      "memberId": "[REDACTED]"
+    }
+  },
+  {
+    "event": "step_completed",
+    "stepId": "open-app",
+    "strategy": "url",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "fill-member-number",
+    "strategy": "label",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-search-members",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-open-member-record",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-savings-account",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "run_finished",
+    "result": {
+      "status": "success",
+      "runId": "e86c1e20-9120-45da-959e-15a876381db7",
+      "capability": "heritage.read-savings-balance@1.0.0",
+      "outputs": {
+        "balance": 4812.37
+      },
+      "completedStep": "click-savings-account",
+      "durationMs": 476,
+      "evidence": [
+        "evidence/replay-success/run.json"
+      ],
+      "modelCalls": 0
+    }
+  }
+]

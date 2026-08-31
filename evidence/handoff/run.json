@@ -1,0 +1,84 @@
+[
+  {
+    "event": "run_started",
+    "runId": "04515126-4b3f-4ca2-bd78-abcd9d3c4f10",
+    "mode": "deterministic_replay",
+    "modelInitialized": false,
+    "modelCalls": 0,
+    "inputs": {
+      "memberId": "[REDACTED]"
+    }
+  },
+  {
+    "event": "step_completed",
+    "stepId": "open-app",
+    "strategy": "url",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "fill-member-number",
+    "strategy": "label",
+    "modelCalls": 0
+  },
+  {
+    "event": "step_completed",
+    "stepId": "click-search-members",
+    "strategy": "role",
+    "modelCalls": 0
+  },
+  {
+    "event": "human_handoff",
+    "decision": "resume",
+    "states": [
+      "AUTOMATION_RUNNING",
+      "INTERVENTION_REQUESTED",
+      "AUTOMATION_PAUSED",
+      "HUMAN_CONTROL",
+      "RESUME_REQUESTED",
+      "AUTOMATION_RUNNING"
+    ],
+    "humanActions": [
+      {
+        "at": "2026-08-31T00:54:59.064Z",
+        "kind": "click",
+        "target": "[REDACTED_TARGET]"
+      },
+      {
+        "at": "2026-08-31T00:54:59.129Z",
+        "kind": "click",
+        "target": "[REDACTED_TARGET]"
+      },
+      {
+        "at": "2026-08-31T00:54:59.197Z",
+        "kind": "click",
+        "target": "[REDACTED_TARGET]"
+      },
+      {
+        "at": "2026-08-31T00:54:59.263Z",
+        "kind": "click",
+        "target": "[REDACTED_TARGET]"
+      }
+    ],
+    "sessionPreserved": true,
+    "modelCalls": 0
+  },
+  {
+    "event": "run_finished",
+    "result": {
+      "status": "success",
+      "runId": "04515126-4b3f-4ca2-bd78-abcd9d3c4f10",
+      "capability": "heritage.read-savings-balance@1.0.0",
+      "outputs": {
+        "balance": 923.1
+      },
+      "completedStep": "click-search-members:human-resume",
+      "durationMs": 811,
+      "evidence": [
+        "evidence/handoff/run.json",
+        "evidence/handoff/failure.png"
+      ],
+      "modelCalls": 0
+    }
+  }
+]
