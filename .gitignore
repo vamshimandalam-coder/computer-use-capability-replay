@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+test-results/
+playwright-report/
+runtime-evidence/
+evidence/video/raw/
+evidence/video/narration.wav
