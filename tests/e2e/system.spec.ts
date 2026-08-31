@@ -11,6 +11,7 @@ import { startLegacyBank } from '../../demo/legacy-bank/server.js';
 import { discover } from '../../src/agent/discovery.js';
 import { ScriptedPlanner } from '../../src/agent/planner.js';
 import { loadCapability } from '../../src/artifacts/io.js';
+import { DEFAULT_TARGET_URL } from '../../src/config/heritage.js';
 let server: Server;
 test.beforeAll(
   async () =>
@@ -29,7 +30,7 @@ test('discovery artifact is constructed from executed parameterized actions', as
   const artifactPath = join(directory, 'capability.json');
   await discover({
     goal: 'Look up member 10001 and read the current savings balance',
-    target: 'http://127.0.0.1:4317/',
+    target: DEFAULT_TARGET_URL,
     inputs: { memberId: '10001' },
     planner: new ScriptedPlanner(),
     maxSteps: 8,
@@ -92,12 +93,28 @@ test('permission denied is a precise hard-failure category', async () => {
     }),
   );
 });
+test('invalid input fails against the typed contract before navigation', async () => {
+  const result = await replay(
+    savingsCapability,
+    { memberId: 'abc' },
+    await mkdtemp(join(tmpdir(), 'invalid-input-')),
+  );
+  expect(result).toEqual(
+    expect.objectContaining({
+      status: 'failure',
+      category: 'input',
+      code: 'INPUT_VALIDATION_FAILED',
+      stepId: 'input-validation',
+      retryable: false,
+    }),
+  );
+});
 test('replay failure routes same-session human control and resumes with outputs', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'integrated-handoff-'));
   const result = await replay(savingsCapability, { memberId: '99999' }, directory, {
     operator: {
       async intervene(_request, page) {
-        await page.goto('http://127.0.0.1:4317/');
+        await page.goto(DEFAULT_TARGET_URL);
         await page.getByLabel('Member number').fill('10001');
         await page.getByRole('button', { name: 'Search members' }).click();
         await page.getByRole('link', { name: 'Open member record' }).click();
@@ -134,7 +151,7 @@ test('not found is a business outcome, not a crash', async () => {
 });
 test('handoff preserves the browser session and returns ownership to automation', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'handoff-'));
-  await demonstrateHandoff('http://127.0.0.1:4317/', directory);
+  await demonstrateHandoff(DEFAULT_TARGET_URL, directory);
   const evidence = JSON.parse(await readFile(join(directory, 'run.json'), 'utf8')) as {
     sessionPreserved: boolean;
     states: string[];

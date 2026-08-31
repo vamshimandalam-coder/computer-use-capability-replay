@@ -1,8 +1,9 @@
 import { chromium, type Page } from '@playwright/test';
 import { copyFile, mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import { DEFAULT_TARGET_URL } from '../src/config/heritage.js';
 
-const target = process.env.TARGET_URL ?? 'http://127.0.0.1:4317/';
+const target = process.env.TARGET_URL ?? DEFAULT_TARGET_URL;
 const outputDir = 'evidence/video';
 const rawDir = join(outputDir, 'raw');
 

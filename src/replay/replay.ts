@@ -7,6 +7,7 @@ import { BrowserSurface, SurfaceFailure } from '../surfaces/browser.js';
 import { PolicyEngine, PolicyError } from '../policy/policy.js';
 import { redact } from '../observability/redact.js';
 import { HandoffController, type Operator } from '../escalation/handoff.js';
+import { DEFAULT_TARGET_URL, heritagePolicyConfig } from '../config/heritage.js';
 
 class RuntimeFailure extends Error {
   constructor(
@@ -16,6 +17,9 @@ class RuntimeFailure extends Error {
   ) {
     super(message);
   }
+}
+class InputValidationError extends Error {
+  readonly code = 'INPUT_VALIDATION_FAILED';
 }
 export interface ReplayOptions {
   operator?: Operator;
@@ -41,18 +45,10 @@ export async function replay(
   ];
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
-  await context.addCookies([
-    { name: 'automation-session', value: runId, url: 'http://127.0.0.1:4317/' },
-  ]);
+  await context.addCookies([{ name: 'automation-session', value: runId, url: DEFAULT_TARGET_URL }]);
   const page = await context.newPage();
   const surface = new BrowserSurface(context, page, evidenceDir);
-  const policy = new PolicyEngine({
-    origins: ['http://127.0.0.1:4317'],
-    routes: [/^\/$/, /^\/search$/, /^\/resume\/\d+$/, /^\/member\/\d+(\/savings)?$/],
-    actions: ['navigate', 'fill', 'click', 'select'],
-    allowReversible: true,
-    approvedRisky: false,
-  });
+  const policy = new PolicyEngine(heritagePolicyConfig());
   let stepId = 'input-validation';
   const evidenceRef = (path: string) => relative(process.cwd(), path).replaceAll('\\', '/');
   const finish = async (result: RunResult) => {
@@ -94,9 +90,10 @@ export async function replay(
   try {
     for (const [key, def] of Object.entries(cap.inputs)) {
       const value = inputs[key];
-      if (def.required && value === undefined) throw new Error(`Missing input ${key}`);
+      if (def.required && value === undefined)
+        throw new InputValidationError(`Required input '${key}' is missing.`);
       if (def.pattern && typeof value === 'string' && !new RegExp(def.pattern).test(value))
-        throw new Error(`Invalid input ${key}`);
+        throw new InputValidationError(`Input '${key}' does not match ${def.pattern}.`);
     }
     for (const step of cap.steps) {
       stepId = step.id;
@@ -144,24 +141,29 @@ export async function replay(
     const policyError = error instanceof PolicyError;
     const surfaceError = error instanceof SurfaceFailure;
     const runtimeError = error instanceof RuntimeFailure;
+    const inputError = error instanceof InputValidationError;
     const code = policyError
       ? error.code
       : runtimeError
         ? error.code
-        : surfaceError
+        : inputError
           ? error.code
-          : 'INVALID_INPUT';
+          : surfaceError
+            ? error.code
+            : 'INVALID_INPUT';
     const category = policyError
       ? 'policy'
       : runtimeError
         ? error.category
-        : surfaceError
-          ? error.code === 'CHECKPOINT_MISMATCH'
-            ? 'checkpoint'
-            : error.code === 'AMBIGUOUS_CONTROL'
-              ? 'ambiguous'
-              : 'surface'
-          : 'surface';
+        : inputError
+          ? 'input'
+          : surfaceError
+            ? error.code === 'CHECKPOINT_MISMATCH'
+              ? 'checkpoint'
+              : error.code === 'AMBIGUOUS_CONTROL'
+                ? 'ambiguous'
+                : 'surface'
+            : 'surface';
     const intervention = cap.escalation.on.includes(code)
       ? {
           runId,
@@ -214,7 +216,11 @@ export async function replay(
       category,
       code,
       stepId,
-      expected: 'step and checkpoint complete',
+      expected: inputError
+        ? 'Inputs satisfy the capability contract.'
+        : surfaceError
+          ? error.message
+          : 'The current step completes within policy.',
       observed: shot?.text.trim() ? shot.text.slice(0, 300) : String(error),
       retryable: false,
       evidence: [evidenceRef(`${evidenceDir}/run.json`), ...(shot ? [shot.screenshot] : [])],

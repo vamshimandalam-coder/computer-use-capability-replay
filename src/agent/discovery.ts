@@ -9,6 +9,7 @@ import { createSavingsCapability } from '../artifacts/sample.js';
 import { saveCapability } from '../artifacts/io.js';
 import { redact } from '../observability/redact.js';
 import type { Capability, LocatorSpec } from '../domain/artifact.js';
+import { heritagePolicyConfig } from '../config/heritage.js';
 export async function discover(options: {
   goal: string;
   target: string;
@@ -26,13 +27,7 @@ export async function discover(options: {
   const context = await browser.newContext();
   const page = await context.newPage();
   const surface = new BrowserSurface(context, page, options.evidenceDir);
-  const policy = new PolicyEngine({
-    origins: [new URL(options.target).origin],
-    routes: [/^\/$/, /^\/search$/, /^\/member\/\d+(\/savings)?$/],
-    actions: ['navigate', 'fill', 'click'],
-    allowReversible: false,
-    approvedRisky: false,
-  });
+  const policy = new PolicyEngine(heritagePolicyConfig(options.target, 'discovery'));
   const inputStrings = Object.values(options.inputs).filter(
     (value): value is string => typeof value === 'string' && value.length > 0,
   );

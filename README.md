@@ -88,3 +88,7 @@ npm audit
 `src/agent` owns discovery, `src/artifacts` validation/storage, `src/surfaces` browser control, `src/replay` deterministic execution, `src/policy` allowlists, `src/escalation` ownership, `demo/legacy-bank` the target, and `tests` verification. The target is UI-only and synthetic. Navigation and action allowlists fail closed; irreversible actions are blocked and risky actions require explicit approval. Inputs, credentials, tokens, and identifiers are recursively redacted. Evidence paths are predictable and path traversal is rejected by the storage helper.
 
 Important limitations: the operator experience is deliberately minimal; visual-coordinate and desktop adapters are not implemented; compatibility metadata is not a tenant registry; and repeating genuine discovery requires the operator's own model credential.
+
+## Development note
+
+AI-assisted development was used extensively. The repository preserves the actual generated evidence and ordinary commit history; the submitter remains responsible for understanding and defending the architecture, behavior, and trade-offs.

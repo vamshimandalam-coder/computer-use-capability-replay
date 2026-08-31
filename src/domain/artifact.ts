@@ -102,7 +102,14 @@ export type RunResult =
   | {
       status: 'failure';
       runId: string;
-      category: 'policy' | 'surface' | 'checkpoint' | 'permission' | 'timeout' | 'ambiguous';
+      category:
+        | 'input'
+        | 'policy'
+        | 'surface'
+        | 'checkpoint'
+        | 'permission'
+        | 'timeout'
+        | 'ambiguous';
       code: string;
       stepId: string;
       expected: string;

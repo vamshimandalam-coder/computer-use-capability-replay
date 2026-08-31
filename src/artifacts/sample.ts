@@ -1,4 +1,5 @@
 import type { Capability } from '../domain/artifact.js';
+import { DEFAULT_TARGET_URL } from '../config/heritage.js';
 type BrowserTarget = NonNullable<Capability['steps'][number]['target']>;
 const target = (description: string, locators: BrowserTarget['locators']): BrowserTarget => ({
   surface: 'browser',
@@ -10,7 +11,7 @@ const baseSteps: Capability['steps'] = [
   {
     id: 'open-app',
     action: 'navigate',
-    value: { source: 'literal', value: 'http://127.0.0.1:4317/' },
+    value: { source: 'literal', value: DEFAULT_TARGET_URL },
     risk: 'safe',
     waitMs: 5000,
   },
@@ -62,7 +63,7 @@ const baseSteps: Capability['steps'] = [
 
 export function createSavingsCapability(
   steps: Capability['steps'] = baseSteps,
-  targetUrl = 'http://127.0.0.1:4317/',
+  targetUrl = DEFAULT_TARGET_URL,
 ): Capability {
   const recordedSteps = steps.map((step) =>
     step.action === 'navigate'

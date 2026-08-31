@@ -6,6 +6,7 @@ import { loadCapability, saveCapability } from './artifacts/io.js';
 import { savingsCapability } from './artifacts/sample.js';
 import { replay } from './replay/replay.js';
 import { demonstrateHandoff } from './escalation/demo.js';
+import { DEFAULT_TARGET_URL } from './config/heritage.js';
 const cli = new Command().name('computer-use');
 cli
   .command('seed-artifact')
@@ -14,7 +15,7 @@ cli
 cli
   .command('discover')
   .requiredOption('--goal <text>')
-  .option('--target <url>', 'target', 'http://127.0.0.1:4317/')
+  .option('--target <url>', 'target', DEFAULT_TARGET_URL)
   .requiredOption('--member-id <id>')
   .option('--provider <name>', 'openai or scripted', 'openai')
   .option('--max-steps <n>', 'step limit', '8')
@@ -51,7 +52,7 @@ cli
   });
 cli
   .command('handoff-demo')
-  .option('--target <url>', 'target', 'http://127.0.0.1:4317/')
+  .option('--target <url>', 'target', DEFAULT_TARGET_URL)
   .option('--evidence <dir>', 'directory', 'runtime-evidence/handoff')
   .action(async (o) => {
     await demonstrateHandoff(o.target, resolve(o.evidence));
@@ -69,7 +70,7 @@ cli
       {
         operator: {
           async intervene(_request, page) {
-            await page.goto('http://127.0.0.1:4317/');
+            await page.goto(DEFAULT_TARGET_URL);
             await page.getByLabel('Member number').fill('10002');
             await page.getByRole('button', { name: 'Search members' }).click();
             await page.getByRole('link', { name: 'Continue' }).click();
